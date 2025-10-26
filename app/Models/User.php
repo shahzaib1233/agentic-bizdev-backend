@@ -3,14 +3,19 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Admin\EmailCampaign;
+use App\Models\admin\Offer;
+use App\Models\admin\Vendor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +26,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+ 
+    ];
+    protected $casts = [
+        'social_media_profiles' => 'array', // Social profiles stored as JSON
+        'referrers' => 'array', // Referrers stored as JSON
     ];
 
     /**
@@ -45,4 +55,37 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+public function posts()
+{
+    return $this->hasMany(Post::class);
+}
+
+    
+public function offers()
+{
+    return $this->hasMany(Offer::class, 'user_id');
+}
+public function emailCampaigns()
+{
+    return $this->hasMany(EmailCampaign::class, 'user_id');
+}
+
+
+
+
+public function vendor()
+{
+    return $this->hasOne(Vendor::class);
+}
+
+
+
+public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);  // Assuming your Subscription model is 'Subscription'
+    }
+
+
+
 }
