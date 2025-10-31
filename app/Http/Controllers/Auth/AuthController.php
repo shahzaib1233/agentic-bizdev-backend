@@ -423,7 +423,7 @@ public function sendTestEmail()
 //get all users
 public function GetAllUsers()
 {
-    $users_rec = Auth::user();
+    // $users_rec = Auth::user();
 
     $users = User::all();
     return response()->json($users);
